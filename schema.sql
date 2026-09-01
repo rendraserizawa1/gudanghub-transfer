@@ -1,4 +1,4 @@
--- SKEMA DATABASE GUDANGHUB TRANSFER (SUPABASE POSTGRESQL)
+﻿-- SKEMA DATABASE GUDANGHUB TRANSFER (SUPABASE POSTGRESQL)
 
 -- 1. Cabang Toko
 CREATE TABLE IF NOT EXISTS branches (
@@ -17,7 +17,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- 2. Master Produk
 CREATE TABLE IF NOT EXISTS products (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id TEXT PRIMARY KEY,
     sku TEXT UNIQUE NOT NULL,
     barcode TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 -- 3. Surat Jalan / Transfer Order (TO)
 CREATE TABLE IF NOT EXISTS transfer_orders (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id TEXT PRIMARY KEY,
     order_no TEXT UNIQUE NOT NULL,
     origin_branch_id TEXT REFERENCES branches(id),
     dest_branch_id TEXT REFERENCES branches(id),
@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS transfer_orders (
 
 -- 4. Detail Barang Transfer
 CREATE TABLE IF NOT EXISTS transfer_order_items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    transfer_id UUID REFERENCES transfer_orders(id) ON DELETE CASCADE,
-    product_id UUID REFERENCES products(id),
+    id TEXT PRIMARY KEY,
+    transfer_id TEXT REFERENCES transfer_orders(id) ON DELETE CASCADE,
+    product_id TEXT REFERENCES products(id),
     qty_planned INT NOT NULL,
     qty_loaded INT DEFAULT 0,
     qty_received INT DEFAULT 0,
@@ -65,14 +65,14 @@ CREATE TABLE IF NOT EXISTS transfer_order_items (
 
 -- 5. Laporan Selisih & Karantina (Wajib Foto & Approval Admin)
 CREATE TABLE IF NOT EXISTS transfer_discrepancies (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    transfer_id UUID REFERENCES transfer_orders(id) ON DELETE CASCADE,
-    product_id UUID REFERENCES products(id),
-    type TEXT NOT NULL, -- 'missing' | 'excess' | 'wrong_item' | 'damaged' | 'unknown_item'
+    id TEXT PRIMARY KEY,
+    transfer_id TEXT REFERENCES transfer_orders(id) ON DELETE CASCADE,
+    product_id TEXT REFERENCES products(id),
+    type TEXT NOT NULL,
     qty_diff INT NOT NULL,
     photo_proof_url TEXT NOT NULL,
     notes TEXT,
-    admin_status TEXT NOT NULL DEFAULT 'pending', -- 'pending' | 'approved' | 'rejected'
+    admin_status TEXT NOT NULL DEFAULT 'pending',
     resolved_by TEXT,
     resolved_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now()
@@ -80,12 +80,12 @@ CREATE TABLE IF NOT EXISTS transfer_discrepancies (
 
 -- 6. Hutang Kirim (Backorder)
 CREATE TABLE IF NOT EXISTS backorders (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    transfer_id UUID REFERENCES transfer_orders(id),
-    product_id UUID REFERENCES products(id),
+    id TEXT PRIMARY KEY,
+    transfer_id TEXT REFERENCES transfer_orders(id),
+    product_id TEXT REFERENCES products(id),
     origin_branch_id TEXT REFERENCES branches(id),
     dest_branch_id TEXT REFERENCES branches(id),
     qty_owed INT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'pending', -- 'pending' | 'fulfilled'
+    status TEXT NOT NULL DEFAULT 'pending',
     created_at TIMESTAMPTZ DEFAULT now()
 );
