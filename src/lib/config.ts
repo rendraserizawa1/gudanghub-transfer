@@ -5,8 +5,8 @@ export const APP = {
   location: 'NTT',
 };
 
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://zhpiuainchpoeurilrpt.supabase.co';
-export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpocGl1YWluY2hwb2V1cmlscnB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMjU1NzIsImV4cCI6MjEwMzgwMTU3Mn0.nNhoGW54Y1iHLJtrsztk_SUWMhKcbsgzIo_CJvymQ1Q';
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export type UserRole = 'admin' | 'gudang_pengirim' | 'gudang_penerima' | 'sopir';
 
