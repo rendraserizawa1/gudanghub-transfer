@@ -27,22 +27,25 @@ export const DiscrepanciesAdmin: React.FC = () => {
       if (!sb) return;
       const { data, error } = await sb
         .from('transfer_discrepancies')
-        .select('*, transfer_orders(order_no)')
+        .select('*, transfer_orders(order_no), products(id, name, brand, size, color, unit)')
         .order('created_at', { ascending: false });
       if (error) { console.error(error); setLoading(false); return; }
       setRows(
-        (data || []).map((d: Record<string, unknown>) => ({
-          id: d.id as string,
-          transfer_id: d.transfer_id as string,
-          product_id: d.product_id as string | undefined,
-          product_name: (d.product_id as string) || '-',
-          type: d.type as DiscRow['type'],
-          qty_diff: d.qty_diff as number,
-          photo_proof_url: d.photo_proof_url as string,
-          notes: d.notes as string | undefined,
-          created_at: d.created_at as string,
-          order_no: (d.transfer_orders as Record<string, unknown> | null)?.order_no as string || '-',
-        }))
+        (data || []).map((d: Record<string, unknown>) => {
+          const prod = (d.products as Record<string, unknown> | null) || null;
+          return {
+            id: d.id as string,
+            transfer_id: d.transfer_id as string,
+            product_id: (d.product_id as string | undefined),
+            product_name: prod ? `[${prod.brand}] ${prod.name} (${prod.size || '-'}, ${prod.color || '-'})` : (d.product_id as string) || '-',
+            type: d.type as DiscRow['type'],
+            qty_diff: d.qty_diff as number,
+            photo_proof_url: d.photo_proof_url as string,
+            notes: d.notes as string | undefined,
+            created_at: d.created_at as string,
+            order_no: (d.transfer_orders as Record<string, unknown> | null)?.order_no as string || '-',
+          };
+        })
       );
       setLoading(false);
     };
