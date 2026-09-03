@@ -30,4 +30,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: 7382f3dc58904b405bb5be9b2c80fb88
+          wranglerVersion: "4.128.0"
           command: pages deploy dist --project-name gudanghub-transfer --branch main
