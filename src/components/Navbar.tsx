@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { APP } from '../lib/config';
+import { APP, getBranchName } from '../lib/config';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const canScan = user?.role === 'superadmin' || user?.role === 'checker' || user?.role === 'penerima';
 
   return (
     <header className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur">
@@ -24,10 +26,12 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="hidden sm:block text-right">
               <p className="text-xs font-semibold text-gray-900">{user.name}</p>
-              <p className="text-[10px] text-gray-500 capitalize">{user.role.replace('_', ' ')}</p>
+              <p className="text-[10px] text-gray-500 capitalize">
+                {user.role} {user.branch_id ? `• ${getBranchName(user.branch_id)}` : ''}
+              </p>
             </div>
             <button
-              onClick={() => { logout(); navigate('/login'); }}
+              onClick={() => { void logout(); navigate('/login'); }}
               className="btn-ghost text-xs px-2.5 py-1.5 border rounded-lg text-danger-600 hover:bg-danger-50"
             >
               Keluar
@@ -57,18 +61,18 @@ export const Navbar: React.FC = () => {
               Surat Jalan (TO)
             </NavLink>
 
-            {(user.role === 'admin' || user.role === 'gudang_pengirim') && (
+            {canScan && (
               <NavLink
                 to="/scan-loading"
                 className={({ isActive }) =>
                   `rounded-lg px-3 py-2 transition-colors ${isActive ? 'bg-white font-semibold text-brand-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`
                 }
               >
-                Scan Muat (Gudang Asal)
+                Scan Muat
               </NavLink>
             )}
 
-            {(user.role === 'admin' || user.role === 'gudang_penerima') && (
+            {(user.role === 'superadmin' || user.role === 'penerima') && (
               <NavLink
                 to="/scan-receiving"
                 className={({ isActive }) =>
@@ -79,7 +83,7 @@ export const Navbar: React.FC = () => {
               </NavLink>
             )}
 
-            {user.role === 'admin' && (
+            {user.role === 'superadmin' && (
               <>
                 <NavLink
                   to="/discrepancies"

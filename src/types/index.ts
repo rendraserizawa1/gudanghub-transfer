@@ -6,6 +6,7 @@ export interface User {
   role: UserRole;
   branch_id?: string;
   branch_name?: string;
+  email?: string;
 }
 
 export interface Product {

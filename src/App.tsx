@@ -11,13 +11,30 @@ import { ScanReceiving } from './pages/ScanReceiving';
 import { DiscrepanciesAdmin } from './pages/DiscrepanciesAdmin';
 import { ProductsMaster } from './pages/ProductsMaster';
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
+function FullPageLoader() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <p className="text-sm text-gray-500">Memuat aplikasi...</p>
+    </div>
+  );
+}
+
+function LoginGate({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) return <FullPageLoader />;
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
-};
+}
+
+function AdminOnly({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  if (user?.role !== 'superadmin') return <Navigate to="/dashboard" replace />;
+  return <>{children}</>;
+}
 
 export const App: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Navbar />
@@ -29,67 +46,71 @@ export const App: React.FC = () => {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <LoginGate>
                 <Dashboard />
-              </ProtectedRoute>
+              </LoginGate>
             }
           />
 
           <Route
             path="/transfers"
             element={
-              <ProtectedRoute>
+              <LoginGate>
                 <TransfersList />
-              </ProtectedRoute>
+              </LoginGate>
             }
           />
 
           <Route
             path="/transfers/new"
             element={
-              <ProtectedRoute>
+              <LoginGate>
                 <CreateTransfer />
-              </ProtectedRoute>
+              </LoginGate>
             }
           />
 
           <Route
             path="/scan-loading"
             element={
-              <ProtectedRoute>
+              <LoginGate>
                 <ScanLoading />
-              </ProtectedRoute>
+              </LoginGate>
             }
           />
 
           <Route
             path="/scan-receiving"
             element={
-              <ProtectedRoute>
+              <LoginGate>
                 <ScanReceiving />
-              </ProtectedRoute>
+              </LoginGate>
             }
           />
 
           <Route
             path="/discrepancies"
             element={
-              <ProtectedRoute>
-                <DiscrepanciesAdmin />
-              </ProtectedRoute>
+              <LoginGate>
+                <AdminOnly>
+                  <DiscrepanciesAdmin />
+                </AdminOnly>
+              </LoginGate>
             }
           />
 
           <Route
             path="/products"
             element={
-              <ProtectedRoute>
-                <ProductsMaster />
-              </ProtectedRoute>
+              <LoginGate>
+                <AdminOnly>
+                  <ProductsMaster />
+                </AdminOnly>
+              </LoginGate>
             }
           />
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
         </Routes>
       </main>
 

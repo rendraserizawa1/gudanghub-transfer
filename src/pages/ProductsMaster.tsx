@@ -1,9 +1,29 @@
-import React, { useState } from 'react';
-import { DEMO_PRODUCTS } from '../lib/demoData';
+import React, { useEffect, useState } from 'react';
+import { supabase as sb, fetchProducts } from '../lib/supabase';
+import type { Product } from '../types';
+
+const EMPTY_FORM = { sku: '', barcode: '', name: '', brand: '', category: '', unit: 'PCS', size: '', color: '' };
 
 export const ProductsMaster: React.FC = () => {
-  const [products] = useState(DEMO_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => {
+    try {
+      const data = await fetchProducts();
+      setProducts(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { void load(); }, []);
 
   const filtered = products.filter(
     (p) =>
@@ -12,6 +32,34 @@ export const ProductsMaster: React.FC = () => {
       p.barcode.includes(search) ||
       p.sku.toLowerCase().includes(search.toLowerCase())
   );
+
+  const addProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!sb) return;
+    if (!form.sku || !form.barcode || !form.name || !form.brand || !form.category) {
+      alert('SKU, Barcode, Nama, Merk, dan Kategori wajib diisi.');
+      return;
+    }
+    setSaving(true);
+    const { error } = await sb.from('products').insert({
+      sku: form.sku,
+      barcode: form.barcode,
+      name: form.name,
+      brand: form.brand,
+      category: form.category,
+      unit: form.unit || 'PCS',
+      size: form.size || null,
+      color: form.color || null,
+    });
+    setSaving(false);
+    if (error) {
+      alert(`Gagal menambah produk: ${error.message}`);
+      return;
+    }
+    setShowForm(false);
+    setForm(EMPTY_FORM);
+    void load();
+  };
 
   return (
     <div className="space-y-4">
@@ -23,10 +71,33 @@ export const ProductsMaster: React.FC = () => {
           </p>
         </div>
 
-        <button type="button" onClick={() => alert('Fitur Tambah Produk')} className="btn-primary text-xs">
-          + Tambah Master Produk
+        <button type="button" onClick={() => setShowForm((v) => !v)} className="btn-primary text-xs">
+          {showForm ? 'Tutup Form' : '+ Tambah Master Produk'}
         </button>
       </div>
+
+      {showForm && (
+        <form onSubmit={addProduct} className="card space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input className="input-field" placeholder="SKU *" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
+            <input className="input-field" placeholder="Barcode *" value={form.barcode} onChange={(e) => setForm({ ...form, barcode: e.target.value })} />
+            <input className="input-field" placeholder="Nama Produk *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input className="input-field" placeholder="Merk / Brand *" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} />
+            <input className="input-field" placeholder="Kategori * (mis: Plastik)" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+            <select className="input-field" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
+              <option value="PCS">PCS</option>
+              <option value="SET">SET</option>
+              <option value="LUSIN">LUSIN</option>
+            </select>
+            <input className="input-field" placeholder="Ukuran (mis: 30 cm)" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })} />
+            <input className="input-field" placeholder="Warna (mis: Hijau)" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })} />
+          </div>
+          <div className="flex gap-2 pt-1">
+            <button type="button" onClick={() => setShowForm(false)} className="btn-ghost flex-1 text-xs">Batal</button>
+            <button type="submit" disabled={saving} className="btn-primary flex-1 text-xs">{saving ? 'Menyimpan...' : 'Simpan Produk'}</button>
+          </div>
+        </form>
+      )}
 
       <div className="card space-y-3">
         <input
@@ -38,6 +109,10 @@ export const ProductsMaster: React.FC = () => {
         />
 
         <div className="divide-y overflow-x-auto">
+          {loading && <p className="py-4 text-center text-xs text-gray-400">Memuat produk...</p>}
+          {!loading && filtered.length === 0 && (
+            <p className="py-4 text-center text-xs text-gray-400">Tidak ada produk ditemukan.</p>
+          )}
           {filtered.map((p) => (
             <div key={p.id} className="py-3 flex items-center justify-between gap-4 min-w-[500px]">
               <div>
