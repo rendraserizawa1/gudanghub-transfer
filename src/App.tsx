@@ -13,17 +13,10 @@ import { ProductsMaster } from './pages/ProductsMaster';
 
 function FullPageLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <p className="text-sm text-gray-500">Memuat aplikasi...</p>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff' }}>
+      <p style={{ fontSize: 14, color: '#888' }}>Memuat aplikasi...</p>
     </div>
   );
-}
-
-function LoginGate({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-  if (loading) return <FullPageLoader />;
-  if (!user) return <Navigate to="/login" replace />;
-  return <>{children}</>;
 }
 
 function AdminOnly({ children }: { children: React.ReactNode }) {
@@ -33,7 +26,11 @@ function AdminOnly({ children }: { children: React.ReactNode }) {
 }
 
 export const App: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) return <FullPageLoader />;
+
+  if (!user) return <Login />;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -41,76 +38,28 @@ export const App: React.FC = () => {
 
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6">
         <Routes>
-          <Route path="/login" element={<Login />} />
-
-          <Route
-            path="/dashboard"
-            element={
-              <LoginGate>
-                <Dashboard />
-              </LoginGate>
-            }
-          />
-
-          <Route
-            path="/transfers"
-            element={
-              <LoginGate>
-                <TransfersList />
-              </LoginGate>
-            }
-          />
-
-          <Route
-            path="/transfers/new"
-            element={
-              <LoginGate>
-                <CreateTransfer />
-              </LoginGate>
-            }
-          />
-
-          <Route
-            path="/scan-loading"
-            element={
-              <LoginGate>
-                <ScanLoading />
-              </LoginGate>
-            }
-          />
-
-          <Route
-            path="/scan-receiving"
-            element={
-              <LoginGate>
-                <ScanReceiving />
-              </LoginGate>
-            }
-          />
-
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/transfers" element={<TransfersList />} />
+          <Route path="/transfers/new" element={<CreateTransfer />} />
+          <Route path="/scan-loading" element={<ScanLoading />} />
+          <Route path="/scan-receiving" element={<ScanReceiving />} />
           <Route
             path="/discrepancies"
             element={
-              <LoginGate>
-                <AdminOnly>
-                  <DiscrepanciesAdmin />
-                </AdminOnly>
-              </LoginGate>
+              <AdminOnly>
+                <DiscrepanciesAdmin />
+              </AdminOnly>
             }
           />
-
           <Route
             path="/products"
             element={
-              <LoginGate>
-                <AdminOnly>
-                  <ProductsMaster />
-                </AdminOnly>
-              </LoginGate>
+              <AdminOnly>
+                <ProductsMaster />
+              </AdminOnly>
             }
           />
-
-          <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
 
