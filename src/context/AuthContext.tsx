@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setAuthError('Email atau password salah.');
+      setAuthError('Username atau password salah.');
       return false;
     }
     return true;

@@ -51,7 +51,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -219,13 +219,14 @@ export const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!username.trim()) return;
     if (!showPassword) {
       setShowPassword(true);
       return;
     }
+    const email = username.trim().includes('@') ? username.trim() : `${username.trim()}@gh.local`;
     setSubmitting(true);
-    const ok = await login(email.trim(), password);
+    const ok = await login(email, password);
     setSubmitting(false);
     if (ok) navigate('/dashboard');
   };
@@ -246,7 +247,7 @@ export const Login: React.FC = () => {
             <p style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.85rem', lineHeight: 1.5 }}>Sign in to your Account.</p>
 
             <form onSubmit={handleLogin} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <input style={input} type="email" placeholder="name@work-email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <input style={input} type="text" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required />
               {showPassword && (
                 <input
                   style={input}
@@ -270,7 +271,7 @@ export const Login: React.FC = () => {
                   onClick={() => setShowPassword(false)}
                   style={{ background: 'none', border: 'none', color: '#888', fontSize: '0.75rem', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
                 >
-                  ← Use a different email
+                  ← Gunakan username lain
                 </button>
               )}
             </form>
