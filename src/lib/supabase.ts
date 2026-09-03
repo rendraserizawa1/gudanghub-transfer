@@ -68,7 +68,11 @@ export async function createTransfer(payload: {
   truck_plate: string;
 }) {
   if (!supabase) throw new Error('no supabase');
-  const { data, error } = await supabase.from('transfer_orders').insert(payload).select().single();
+  const { data, error } = await supabase
+    .from('transfer_orders')
+    .insert({ ...payload, status: 'loading' })
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }
