@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy": "vite build && gh-pages -d dist"
+    "deploy": "vite build && wrangler pages deploy dist --project-name gudanghub-transfer --branch main"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",
@@ -29,7 +29,6 @@
     "@types/react-signature-canvas": "^1.0.7",
     "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.5.4",
-    "gh-pages": "^6.3.0",
     "oxlint": "^1.79.0",
     "postcss": "^8.5.26",
     "tailwindcss": "^3.4.19",

@@ -116,10 +116,11 @@ draft → loading → in_transit → receiving → completed
 
 ## 10. Deployment
 
-- URL: https://rendraserizawa1.github.io/gudanghub-transfer/
-- Build: `vite build && gh-pages -d dist`
+- **Primary (Cloudflare Pages):** https://gudanghub-transfer.pages.dev/
+- Build & deploy: `npm run deploy` = `vite build && wrangler pages deploy dist --project-name gudanghub-transfer --branch main`
 - Env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-- `vite.config.ts` base `'./'` (project site)
+- `vite.config.ts` base `'./'` (asset relatif, kompatibel Pages & GH Pages)
+- OAuth login wrangler: `wrangler login` (akun silitongadimas@gmail.com)
 
 ## 11. Roadmap
 
