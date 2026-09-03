@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase, fetchProfile } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { getBranchName } from '../lib/config';
 import type { User } from '../types';
 
@@ -13,27 +13,23 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function userFromSession(sessionUser: { id: string; email?: string; user_metadata?: Record<string, unknown> }): User {
+  const meta = (sessionUser.user_metadata || {}) as Record<string, unknown>;
+  const branchId = (meta.branch_id as string) || undefined;
+  return {
+    id: sessionUser.id,
+    name: (meta.name as string) || sessionUser.email || 'User',
+    role: (meta.role as User['role']) || 'penerima',
+    branch_id: branchId,
+    branch_name: branchId ? getBranchName(branchId) : undefined,
+    email: sessionUser.email,
+  };
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
-
-  const hydrateUser = async (authUserId: string) => {
-    const profile = await fetchProfile(authUserId);
-    if (!profile) {
-      setUser(null);
-      setAuthError('Akun belum memiliki profil. Hubungi superadmin.');
-      return;
-    }
-    setUser({
-      id: profile.id,
-      name: profile.name,
-      role: profile.role,
-      branch_id: profile.branch_id || undefined,
-      branch_name: profile.branch_id ? getBranchName(profile.branch_id) : undefined,
-    });
-    setAuthError(null);
-  };
 
   useEffect(() => {
     if (!supabase) {
@@ -43,12 +39,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) void hydrateUser(data.session.user.id);
+      if (data.session?.user) setUser(userFromSession(data.session.user));
       setLoading(false);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) void hydrateUser(session.user.id);
+      if (session?.user) setUser(userFromSession(session.user));
       else {
         setUser(null);
         setAuthError(null);
@@ -56,7 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return () => sub.subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = async (email: string, password: string) => {
