@@ -47,7 +47,7 @@ const Footer = (
 );
 
 export const Login: React.FC = () => {
-  const { login, authError, loading } = useAuth();
+  const { login, authError } = useAuth();
   const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLogin, setIsLogin] = useState(true);
