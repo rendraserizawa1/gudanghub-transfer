@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchTransfers, type TransferRecord } from '../lib/supabase';
 import { STATUS_LABELS, STATUS_COLORS, getBranchName } from '../lib/config';
+import { downloadPDF, downloadXLSX } from '../lib/export';
 import { Link } from 'react-router-dom';
 
 export const TransfersList: React.FC = () => {
@@ -13,7 +14,7 @@ export const TransfersList: React.FC = () => {
     const load = async () => {
       try {
         const branchIds =
-          user?.role === 'superadmin' ? null : user?.branch_id ? [user.branch_id] : [];
+          user?.role === 'admin' ? null : user?.branch_id ? [user.branch_id] : [];
         const data = await fetchTransfers(branchIds);
         setTransfers(data);
       } catch (e) {
@@ -25,6 +26,8 @@ export const TransfersList: React.FC = () => {
     void load();
   }, [user]);
 
+  const canDownload = user?.role === 'admin' || !!user?.perms?.download;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -33,9 +36,17 @@ export const TransfersList: React.FC = () => {
           <p className="text-xs text-gray-500">Semua riwayat dan antrean pengiriman barang antar cabang</p>
         </div>
 
-        <Link to="/transfers/new" className="btn-primary text-xs">
-          + Buat Surat Jalan Baru
-        </Link>
+        <div className="flex items-center gap-2">
+          {canDownload && transfers.length > 0 && (
+            <>
+              <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">â¬‡ PDF</button>
+              <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">â¬‡ XLSX</button>
+            </>
+          )}
+          <Link to="/transfers/new" className="btn-primary text-xs">
+            + Buat Surat Jalan Baru
+          </Link>
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -54,18 +65,18 @@ export const TransfersList: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-gray-600 mt-1">
-                  <span className="font-semibold">{getBranchName(t.origin_branch_id)}</span> →{' '}
+                  <span className="font-semibold">{getBranchName(t.origin_branch_id)}</span> â†’{' '}
                   <span className="font-semibold">{getBranchName(t.dest_branch_id)}</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                {t.status === 'in_transit' && user?.role !== 'checker' && (
+                {t.status === 'in_transit' && user?.role !== 'toko_cabang' && (
                   <Link to={`/scan-receiving?id=${t.id}`} className="btn-success text-xs py-1.5">
                     Scan Bongkar
                   </Link>
                 )}
-                {t.status === 'loading' && user?.role !== 'superadmin' && (
+                {t.status === 'loading' && user?.role !== 'admin' && (
                   <Link to={`/scan-loading?id=${t.id}`} className="btn-primary text-xs py-1.5">
                     Scan Muat
                   </Link>

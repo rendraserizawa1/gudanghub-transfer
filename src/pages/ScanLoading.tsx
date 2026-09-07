@@ -78,12 +78,12 @@ export const ScanLoading: React.FC = () => {
   const handleScan = async (barcode: string) => {
     const product = await findProductByBarcode(barcode);
     if (!product) {
-      alert('⚠️ Barcode Tidak Dikenal dalam Master Produk!');
+      alert('âš ï¸ Barcode Tidak Dikenal dalam Master Produk!');
       return;
     }
     const itemInTransfer = items.find((i) => i.product_id === product.id);
     if (!itemInTransfer) {
-      alert(`⚠️ Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
+      alert(`âš ï¸ Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
       return;
     }
     setLoadedQty((prev) => ({
@@ -222,7 +222,7 @@ export const ScanLoading: React.FC = () => {
               </div>
             ) : (
               <button type="button" onClick={() => void handleCaptureSeal()} className="btn-outline w-full py-3 text-xs">
-                📸 Ambil Foto Pintu Truk Terkunci / Bagasi
+                ðŸ“¸ Ambil Foto Pintu Truk Terkunci / Bagasi
               </button>
             )}
           </div>
@@ -245,14 +245,14 @@ export const ScanLoading: React.FC = () => {
                 onClick={() => setActiveSigModal('pengirim')}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigPengirim ? '✓ TT Pengirim' : '✍️ TT Pengirim'}
+                {sigPengirim ? 'âœ“ TT Pengirim' : 'âœï¸ TT Pengirim'}
               </button>
               <button
                 type="button"
                 onClick={() => { if (!sopirName.trim()) alert('Isi nama sopir dulu!'); else setActiveSigModal('sopir'); }}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigSopir ? '✓ TT Sopir' : '✍️ TT Sopir Transport'}
+                {sigSopir ? 'âœ“ TT Sopir' : 'âœï¸ TT Sopir Transport'}
               </button>
             </div>
           </div>
@@ -270,7 +270,7 @@ export const ScanLoading: React.FC = () => {
 
       <SignatureModal
         isOpen={activeSigModal === 'pengirim'}
-        title={`Tanda Tangan Pengirim (${user?.role === 'checker' ? 'Checker - Gudang Pusat' : user?.branch_name || ''})`}
+        title={`Tanda Tangan Pengirim (${user?.role === 'toko_cabang' ? 'Checker - Gudang Pusat' : user?.branch_name || ''})`}
         onClose={() => setActiveSigModal(null)}
         onSave={(data) => setSigPengirim(data)}
       />

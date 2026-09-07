@@ -1,14 +1,15 @@
 export const APP = {
-  name: 'GudangHub Transfer',
-  version: '2.0.0',
+  name: 'MY REPORT',
+  version: '3.0.0',
   company: 'PT Central Perabot Utama',
   location: 'NTT',
 };
 
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+export const ADMIN_API_URL = 'https://myreport-admin-api.silitongadimas.workers.dev';
 
-export type UserRole = 'superadmin' | 'checker' | 'penerima';
+export type UserRole = 'admin' | 'toko_cabang';
 
 export interface Branch {
   id: string;
@@ -17,23 +18,14 @@ export interface Branch {
   type: 'pusat' | 'toko';
 }
 
-export interface Profile {
-  id: string;
-  name: string;
-  role: UserRole;
-  branch_id?: string | null;
-  branch_name?: string;
-}
-
 export const BRANCHES: Branch[] = [
-  { id: 'CB000', name: 'Gudang Pusat', address: 'Jl. Pusat, Kupang', type: 'pusat' },
-  { id: 'CB001', name: 'Toko Nasional Kitchen Eltari', address: 'Jl. Eltari, Kupang', type: 'toko' },
-  { id: 'CB002', name: 'Toko Perabot Mama Oesapa', address: 'Jl. Oesapa, Kupang', type: 'toko' },
-  { id: 'CB003', name: 'Toko Perabot Mama TDM', address: 'Jl. TDM, Kupang', type: 'toko' },
-  { id: 'CB004', name: 'Toko Perabot Mama Kefamenanu', address: 'Jl. Utama, Kefamenanu', type: 'toko' },
+  { id: 'CB000', name: 'Toko Central Perabot', address: 'Toko Central Perabot', type: 'toko' },
+  { id: 'CB001', name: 'Toko Nasional Kitchen', address: 'Toko Nasional Kitchen', type: 'toko' },
+  { id: 'CB002', name: 'Toko Perabot Mamaku Oesapa', address: 'Toko Perabot Mamaku Oesapa', type: 'toko' },
+  { id: 'CB003', name: 'Toko Perabot Mama TDM', address: 'Toko Perabot Mama TDM', type: 'toko' },
+  { id: 'CB004', name: 'Toko Perabot Mamaku Kefamenanu', address: 'Toko Perabot Mamaku Kefamenanu', type: 'toko' },
+  { id: 'CB005', name: 'RUMA', address: 'RUMA', type: 'toko' },
 ];
-
-export const GUDANG_PUSAT_ID = 'CB000';
 
 export type TransferStatus = 'draft' | 'loading' | 'in_transit' | 'receiving' | 'discrepancy' | 'completed' | 'cancelled';
 

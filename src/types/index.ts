@@ -1,12 +1,12 @@
-import type { UserRole } from '../lib/config';
-
 export interface User {
   id: string;
   name: string;
-  role: UserRole;
+  role: 'admin' | 'toko_cabang';
   branch_id?: string;
   branch_name?: string;
   email?: string;
+  perms?: Record<string, boolean>;
+  inactive?: boolean;
 }
 
 export interface Product {

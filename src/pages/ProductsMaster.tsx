@@ -138,7 +138,7 @@ export const ProductsMaster: React.FC = () => {
                   onClick={() => alert(`Cetak Label Barcode Thermal untuk ${p.name}`)}
                   className="btn-outline text-xs py-1.5 px-2.5"
                 >
-                  🖨️ Cetak Stiker
+                  ðŸ–¨ï¸ Cetak Stiker
                 </button>
               </div>
             </div>

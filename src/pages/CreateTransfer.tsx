@@ -11,8 +11,8 @@ export const CreateTransfer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [saving, setSaving] = useState(false);
 
-  const isSuper = user?.role === 'superadmin';
-  const isChecker = user?.role === 'checker';
+  const isSuper = user?.role === 'admin';
+  const isChecker = user?.role === 'toko_cabang';
   const allowedOrigin = isChecker ? ['CB000'] : [user?.branch_id || ''];
 
   const [origin, setOrigin] = useState(isSuper ? 'CB000' : allowedOrigin[0]);
@@ -160,7 +160,7 @@ export const CreateTransfer: React.FC = () => {
                 onClick={() => setSelectedItems(selectedItems.filter((_, i) => i !== idx))}
                 className="text-danger-500 font-bold px-2"
               >
-                ✕
+                âœ•
               </button>
             </div>
           ))}

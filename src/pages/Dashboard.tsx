@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { fetchTransfers, type TransferRecord } from '../lib/supabase';
 import { STATUS_LABELS, STATUS_COLORS, getBranchName } from '../lib/config';
+import { downloadPDF, downloadXLSX } from '../lib/export';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ export const Dashboard: React.FC = () => {
     const load = async () => {
       try {
         const branchIds =
-          user?.role === 'superadmin' ? null : user?.branch_id ? [user.branch_id] : [];
+          user?.role === 'admin' ? null : user?.branch_id ? [user.branch_id] : [];
         const data = await fetchTransfers(branchIds);
         setTransfers(data);
       } catch (e) {
@@ -27,6 +28,7 @@ export const Dashboard: React.FC = () => {
 
   const pendingDiscrepancies = transfers.filter((t) => t.status === 'discrepancy');
   const inTransitCount = transfers.filter((t) => t.status === 'in_transit').length;
+  const canDownload = user?.role === 'admin' || !!user?.perms?.download;
 
   return (
     <div className="space-y-6">
@@ -35,7 +37,7 @@ export const Dashboard: React.FC = () => {
           <h2 className="text-xl font-bold text-gray-900">Dashboard Operasional</h2>
           <p className="text-xs text-gray-500">
             Selamat datang, <span className="font-semibold text-gray-800">{user?.name}</span> ({user?.role})
-            {user?.branch_id ? ` • ${getBranchName(user.branch_id)}` : ''}
+            {user?.branch_id ? ` â€¢ ${getBranchName(user.branch_id)}` : ''}
           </p>
         </div>
 
@@ -51,7 +53,7 @@ export const Dashboard: React.FC = () => {
               <span className="flex h-3 w-3 rounded-full bg-danger-500 animate-pulse" />
               <h3 className="text-sm font-bold text-danger-600">Peringatan: Laporan Selisih Menunggu Approval Admin</h3>
             </div>
-            {user?.role === 'superadmin' && (
+            {user?.role === 'admin' && (
               <Link to="/discrepancies" className="text-xs font-bold text-danger-600 underline">
                 Lihat Semua ({pendingDiscrepancies.length})
               </Link>
@@ -66,30 +68,37 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card">
           <p className="text-xs text-gray-500">Total Pengiriman</p>
-          <p className="text-2xl font-black text-gray-900 mt-1">{loading ? '…' : transfers.length}</p>
+          <p className="text-2xl font-black text-gray-900 mt-1">{loading ? 'â€¦' : transfers.length}</p>
         </div>
 
         <div className="card">
           <p className="text-xs text-gray-500">Dalam Perjalanan</p>
-          <p className="text-2xl font-black text-warning-600 mt-1">{loading ? '…' : inTransitCount}</p>
+          <p className="text-2xl font-black text-warning-600 mt-1">{loading ? 'â€¦' : inTransitCount}</p>
         </div>
 
         <div className="card">
           <p className="text-xs text-gray-500">Ada Selisih (Karantina)</p>
-          <p className="text-2xl font-black text-danger-600 mt-1">{loading ? '…' : pendingDiscrepancies.length}</p>
+          <p className="text-2xl font-black text-danger-600 mt-1">{loading ? 'â€¦' : pendingDiscrepancies.length}</p>
         </div>
 
         <div className="card">
           <p className="text-xs text-gray-500">Mode Sistem</p>
-          <p className="text-sm font-bold text-success-600 mt-2">✓ Online / Offline Ready</p>
+          <p className="text-sm font-bold text-success-600 mt-2">âœ“ Online / Offline Ready</p>
         </div>
       </div>
+
+      {canDownload && transfers.length > 0 && (
+        <div className="flex gap-2">
+          <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">â¬‡ Download PDF</button>
+          <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">â¬‡ Download XLSX</button>
+        </div>
+      )}
 
       <div className="card space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-gray-900">Daftar Pengiriman Terbaru</h3>
           <Link to="/transfers" className="text-xs font-semibold text-brand-600 hover:underline">
-            Lihat Semua →
+            Lihat Semua â†’
           </Link>
         </div>
 
@@ -108,7 +117,7 @@ export const Dashboard: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {getBranchName(t.origin_branch_id)} → {getBranchName(t.dest_branch_id)}
+                  {getBranchName(t.origin_branch_id)} â†’ {getBranchName(t.dest_branch_id)}
                 </p>
               </div>
 
