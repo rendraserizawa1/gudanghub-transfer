@@ -224,9 +224,8 @@ export const Login: React.FC = () => {
       setShowPassword(true);
       return;
     }
-    const email = username.trim().includes('@') ? username.trim() : `${username.trim()}@gh.local`;
     setSubmitting(true);
-    const ok = await login(email, password);
+    const ok = await login(username.trim(), password);
     setSubmitting(false);
     if (ok) navigate('/dashboard');
   };

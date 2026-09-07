@@ -7,8 +7,9 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   authError: string | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
+  updateOwnPassword: (newPassword: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,13 +17,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 function userFromSession(sessionUser: { id: string; email?: string; user_metadata?: Record<string, unknown> }): User {
   const meta = (sessionUser.user_metadata || {}) as Record<string, unknown>;
   const branchId = (meta.branch_id as string) || undefined;
+  const perms = (meta.perms as Record<string, boolean>) || {};
+  const active = meta.active !== false;
+  if (!active) {
+    return {
+      id: sessionUser.id,
+      name: (meta.name as string) || sessionUser.email || 'User',
+      role: 'toko_cabang',
+      branch_id: branchId,
+      branch_name: branchId ? getBranchName(branchId) : undefined,
+      email: sessionUser.email,
+      perms,
+      inactive: true,
+    };
+  }
   return {
     id: sessionUser.id,
     name: (meta.name as string) || sessionUser.email || 'User',
-    role: (meta.role as User['role']) || 'penerima',
+    role: (meta.role as User['role']) || 'toko_cabang',
     branch_id: branchId,
     branch_name: branchId ? getBranchName(branchId) : undefined,
     email: sessionUser.email,
+    perms,
   };
 }
 
@@ -54,12 +70,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     setAuthError(null);
     if (!supabase) {
       setAuthError('Konfigurasi Supabase tidak tersedia.');
       return false;
     }
+    const email = username.trim().includes('@') ? username.trim() : `${username.toLowerCase().replace(/\s+/g, '')}@myreport.local`;
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setAuthError('Username atau password salah.');
@@ -73,8 +90,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const updateOwnPassword = async (newPassword: string) => {
+    if (!supabase) return false;
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    return !error;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, authError, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, authError, login, logout, updateOwnPassword }}>
       {children}
     </AuthContext.Provider>
   );

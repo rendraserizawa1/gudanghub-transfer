@@ -10,6 +10,7 @@ import { ScanLoading } from './pages/ScanLoading';
 import { ScanReceiving } from './pages/ScanReceiving';
 import { DiscrepanciesAdmin } from './pages/DiscrepanciesAdmin';
 import { ProductsMaster } from './pages/ProductsMaster';
+import { UsersAdmin } from './pages/UsersAdmin';
 
 function FullPageLoader() {
   return (
@@ -21,7 +22,7 @@ function FullPageLoader() {
 
 function AdminOnly({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  if (user?.role !== 'superadmin') return <Navigate to="/dashboard" replace />;
+  if (user?.role !== 'admin') return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
 
@@ -56,6 +57,14 @@ export const App: React.FC = () => {
             element={
               <AdminOnly>
                 <ProductsMaster />
+              </AdminOnly>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <AdminOnly>
+                <UsersAdmin />
               </AdminOnly>
             }
           />

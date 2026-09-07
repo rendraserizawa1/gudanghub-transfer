@@ -15,12 +15,15 @@
     "date-fns": "^4.4.0",
     "html5-qrcode": "^2.3.8",
     "jsbarcode": "^3.12.3",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
     "react-signature-canvas": "^1.1.0-alpha.2",
     "signature_pad": "^5.1.4",
-    "sonner": "^2.0.8"
+    "sonner": "^2.0.8",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
