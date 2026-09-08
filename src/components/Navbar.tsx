@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
               </NavLink>
             )}
 
-            {isAdmin && (
+            {user?.role === 'admin' && (
               <NavLink
                 to="/users"
                 className={({ isActive }) =>
@@ -108,6 +108,15 @@ export const Navbar: React.FC = () => {
                 Kelola User
               </NavLink>
             )}
+
+            <NavLink
+              to="/password"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 transition-colors ${isActive ? 'bg-white font-semibold text-orange-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`
+              }
+            >
+              Ganti Password
+            </NavLink>
           </div>
         </nav>
       )}
