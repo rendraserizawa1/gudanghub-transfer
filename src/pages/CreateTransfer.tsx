@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { BRANCHES, getBranchName, ADMIN_API_URL } from '../lib/config';
+import { logAction } from '../lib/audit';
 import { fetchProducts, createTransfer, insertTransferItems } from '../lib/supabase';
 import type { Product } from '../types';
 
@@ -66,7 +67,7 @@ export const CreateTransfer: React.FC = () => {
         }))
       );
 
-      alert(`Surat Jalan ${order_no} berhasil dibuat!`);
+      alert(`Surat Jalan ${order_no} berhasil dibuat!`); void logAction("create_transfer", `${order_no}: ${getBranchName(origin)} → ${getBranchName(dest)}`);
 
       // Notif push ke admin (fire-and-forget, tidak blok)
       try {
@@ -81,7 +82,7 @@ export const CreateTransfer: React.FC = () => {
             body: JSON.stringify({
               admins: true,
               title: 'Surat Jalan Baru',
-              body: `${order_no}: ${getBranchName(origin)} â†’ ${getBranchName(dest)} oleh ${user.name}`,
+              body: `${order_no}: ${getBranchName(origin)} Ã¢â€ â€™ ${getBranchName(dest)} oleh ${user.name}`,
             }),
           });
         }
@@ -179,7 +180,7 @@ export const CreateTransfer: React.FC = () => {
                 onClick={() => setSelectedItems(selectedItems.filter((_, i) => i !== idx))}
                 className="text-danger-500 font-bold px-2"
               >
-                Ã¢Å“â€¢
+                ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢
               </button>
             </div>
           ))}
