@@ -23,17 +23,17 @@ export const PasswordChange: React.FC = () => {
   return (
     <div className="mx-auto max-w-md space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Ganti Password</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Ganti Password</h2>
         <p className="text-xs text-gray-500">Ubah password akun Anda sendiri</p>
       </div>
 
-      <form onSubmit={save} className="card space-y-3">
+      <form onSubmit={save} className="card dark:bg-[#141828] dark:border-[#232840] space-y-3">
         <label className="block text-xs">
-          <span className="font-semibold text-gray-700">Password Baru *</span>
+          <span className="font-semibold text-gray-700 dark:text-gray-200">Password Baru *</span>
           <input type="password" className="input-field mt-1" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={6} />
         </label>
         <label className="block text-xs">
-          <span className="font-semibold text-gray-700">Konfirmasi Password *</span>
+          <span className="font-semibold text-gray-700 dark:text-gray-200">Konfirmasi Password *</span>
           <input type="password" className="input-field mt-1" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
         </label>
         {msg && <p className={`text-xs ${msg.includes('berhasil') ? 'text-success-600' : 'text-danger-600'}`}>{msg}</p>}

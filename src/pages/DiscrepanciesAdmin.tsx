@@ -84,7 +84,7 @@ export const DiscrepanciesAdmin: React.FC = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Panel Approval Selisih Barang (Karantina Admin)</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Panel Approval Selisih Barang (Karantina Admin)</h2>
         <p className="text-xs text-gray-500">
           Setiap laporan kurang/lebih/salah barang wajib dikonfirmasi Admin sebelum stok resmi disesuaikan
         </p>
@@ -93,10 +93,10 @@ export const DiscrepanciesAdmin: React.FC = () => {
       <div className="space-y-3">
         {loading && <p className="py-4 text-center text-xs text-gray-400">Memuat laporan...</p>}
         {!loading && rows.length === 0 && (
-          <div className="card p-8 text-center text-gray-400 text-xs">Tidak ada laporan selisih yang pending.</div>
+          <div className="card dark:bg-[#141828] dark:border-[#232840] p-8 text-center text-gray-400 text-xs">Tidak ada laporan selisih yang pending.</div>
         )}
         {rows.map((disc) => (
-          <div key={disc.id} className="card space-y-3">
+          <div key={disc.id} className="card dark:bg-[#141828] dark:border-[#232840] space-y-3">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-xs text-brand-700">{disc.order_no}</span>
@@ -107,9 +107,9 @@ export const DiscrepanciesAdmin: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1 text-xs">
-                <p className="font-bold text-gray-900">{disc.product_name}</p>
+                <p className="font-bold text-gray-900 dark:text-white">{disc.product_name}</p>
                 <p className="font-bold text-danger-600">Selisih: {disc.qty_diff} PCS</p>
-                <p className="text-gray-600 bg-gray-50 p-2 rounded border mt-2">
+                <p className="text-gray-600 bg-gray-50 dark:bg-[#0A0E1A] p-2 rounded border mt-2">
                   <span className="font-semibold">Catatan Lapangan:</span> "{disc.notes || '-'}"
                 </p>
               </div>
@@ -125,7 +125,7 @@ export const DiscrepanciesAdmin: React.FC = () => {
 
               <div className="flex flex-col justify-between space-y-2 border-l pl-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Keputusan Admin:</label>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Keputusan Admin:</label>
                   <select
                     className="input-field text-xs"
                     value={decision[disc.id] || 'adjust'}

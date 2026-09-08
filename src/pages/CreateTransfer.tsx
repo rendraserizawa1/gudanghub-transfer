@@ -81,7 +81,7 @@ export const CreateTransfer: React.FC = () => {
             body: JSON.stringify({
               admins: true,
               title: 'Surat Jalan Baru',
-              body: `${order_no}: ${getBranchName(origin)} → ${getBranchName(dest)} oleh ${user.name}`,
+              body: `${order_no}: ${getBranchName(origin)} â†’ ${getBranchName(dest)} oleh ${user.name}`,
             }),
           });
         }
@@ -98,14 +98,14 @@ export const CreateTransfer: React.FC = () => {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Buat Surat Jalan Digital Baru</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Buat Surat Jalan Digital Baru</h2>
         <p className="text-xs text-gray-500">Tentukan cabang asal, tujuan, sopir, dan daftar rencana muat barang</p>
       </div>
 
-      <form onSubmit={handleCreate} className="card space-y-4">
+      <form onSubmit={handleCreate} className="card dark:bg-[#141828] dark:border-[#232840] space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Cabang Asal (Loading)</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Cabang Asal (Loading)</label>
             <select value={origin} onChange={(e) => setOrigin(e.target.value)} className="input-field" disabled={!isSuper}>
               {BRANCHES.filter((b) => isSuper || b.id === fixedOrigin).map((b) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
@@ -115,7 +115,7 @@ export const CreateTransfer: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Cabang Tujuan (Unloading)</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Cabang Tujuan (Unloading)</label>
             <select value={dest} onChange={(e) => setDest(e.target.value)} className="input-field">
               {BRANCHES.filter((b) => b.type === 'toko' && b.id !== origin).map((b) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
@@ -126,19 +126,19 @@ export const CreateTransfer: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Nama Sopir / Transport</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Nama Sopir / Transport</label>
             <input type="text" value={driver} onChange={(e) => setDriver(e.target.value)} className="input-field" placeholder="Nama sopir" />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Nomor Plat Mobil</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Nomor Plat Mobil</label>
             <input type="text" value={plate} onChange={(e) => setPlate(e.target.value)} className="input-field" placeholder="DH 1234 AB" />
           </div>
         </div>
 
         <div className="border-t pt-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-gray-900">Daftar Rencana Muat Barang</h3>
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white">Daftar Rencana Muat Barang</h3>
             <button type="button" onClick={addItemRow} className="text-xs font-semibold text-brand-600 hover:underline">
               + Tambah Barang
             </button>
@@ -179,7 +179,7 @@ export const CreateTransfer: React.FC = () => {
                 onClick={() => setSelectedItems(selectedItems.filter((_, i) => i !== idx))}
                 className="text-danger-500 font-bold px-2"
               >
-                âœ•
+                Ã¢Å“â€¢
               </button>
             </div>
           ))}
