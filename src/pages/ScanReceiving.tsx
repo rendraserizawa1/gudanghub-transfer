@@ -6,6 +6,7 @@ import { capturePhoto, addWatermark } from '../lib/camera';
 import { SignatureModal } from '../components/SignatureModal';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { getBranchName } from '../lib/config';
+import { uploadPhoto } from '../lib/storage';
 import type { Product } from '../types';
 
 export const ScanReceiving: React.FC = () => {
@@ -52,7 +53,7 @@ export const ScanReceiving: React.FC = () => {
   const handleBlindScan = async (barcode: string) => {
     const product = await findProductByBarcode(barcode);
     if (!product) {
-      alert('Ã¢Å¡Â Ã¯Â¸Â Barcode Tidak Terdaftar di Sistem Master!');
+      alert('ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Barcode Tidak Terdaftar di Sistem Master!');
       return;
     }
     setReceivedQty((prev) => ({
@@ -96,7 +97,7 @@ export const ScanReceiving: React.FC = () => {
       product_id: reportProductId,
       type: reportType,
       qty_diff: reportType === 'excess' ? reportQty : -reportQty,
-      photo_proof_url: reportPhoto,
+      photo_proof_url: await uploadPhoto(reportPhoto, 'discrepancies'),
       notes: reportNotes,
       admin_status: 'pending',
     });
@@ -115,7 +116,7 @@ export const ScanReceiving: React.FC = () => {
     if (!sigPenerima || !sigSopir) { alert('Wajib tanda tangan penerima & sopir!'); return; }
     const { error } = await sb.from('transfer_orders').update({
       status: 'completed',
-      photo_unloading_seal: photoUnload,
+      photo_unloading_seal: await uploadPhoto(photoUnload, 'unloading'),
       sign_penerima: sigPenerima,
       sign_sopir: sigSopir,
       received_by: user?.name || '',
@@ -132,7 +133,7 @@ export const ScanReceiving: React.FC = () => {
     <div className="mx-auto max-w-2xl space-y-4">
       <div className="bg-brand-50 border border-brand-200 rounded-xl p-3">
         <div className="flex items-center gap-2 text-brand-800 font-bold text-sm">
-          <span>Ã°Å¸â€â€™ Mode Blind Receiving (Tutup Mata)</span>
+          <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â„¢ Mode Blind Receiving (Tutup Mata)</span>
         </div>
         <p className="text-xs text-brand-700 mt-1">
           Daftar kuantitas disembunyikan. Petugas wajib scan satu per satu barang fisik yang turun dari mobil.
@@ -170,7 +171,7 @@ export const ScanReceiving: React.FC = () => {
                 onClick={() => setShowReportModal(true)}
                 className="btn-danger text-[11px] py-1 px-2.5"
               >
-                Ã¢Å¡Â Ã¯Â¸Â Laporkan Selisih / Rusak
+                ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Laporkan Selisih / Rusak
               </button>
             </div>
 
@@ -209,7 +210,7 @@ export const ScanReceiving: React.FC = () => {
               </div>
             ) : (
               <button type="button" onClick={() => void handleCaptureUnloadPhoto()} className="btn-outline w-full py-3 text-xs">
-                Ã°Å¸â€œÂ¸ Ambil Foto Pintu Mobil Sebelum Dibuka
+                ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¸ Ambil Foto Pintu Mobil Sebelum Dibuka
               </button>
             )}
           </div>
@@ -232,14 +233,14 @@ export const ScanReceiving: React.FC = () => {
                 onClick={() => setActiveSigModal('penerima')}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigPenerima ? 'Ã¢Å“â€œ TT Penerima' : 'Ã¢Å“ÂÃ¯Â¸Â TT Petugas Penerima'}
+                {sigPenerima ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ TT Penerima' : 'ÃƒÂ¢Ã…â€œÃ‚ÂÃƒÂ¯Ã‚Â¸Ã‚Â TT Petugas Penerima'}
               </button>
               <button
                 type="button"
                 onClick={() => { if (!sopirName.trim()) alert('Isi nama sopir dulu!'); else setActiveSigModal('sopir'); }}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigSopir ? 'Ã¢Å“â€œ TT Sopir' : 'Ã¢Å“ÂÃ¯Â¸Â TT Sopir Transport'}
+                {sigSopir ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ TT Sopir' : 'ÃƒÂ¢Ã…â€œÃ‚ÂÃƒÂ¯Ã‚Â¸Ã‚Â TT Sopir Transport'}
               </button>
             </div>
           </div>
@@ -316,7 +317,7 @@ export const ScanReceiving: React.FC = () => {
                 <img src={reportPhoto} alt="Bukti Selisih" className="w-full h-32 object-cover rounded-lg border" />
               ) : (
                 <button type="button" onClick={() => void handleCaptureReportPhoto()} className="btn-outline w-full py-2 text-xs">
-                  Ã°Å¸â€œÂ¸ Ambil Foto Bukti Selisih
+                  ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¸ Ambil Foto Bukti Selisih
                 </button>
               )}
             </div>
