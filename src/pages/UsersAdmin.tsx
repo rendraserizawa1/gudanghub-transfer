@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ADMIN_API_URL, BRANCHES } from '../lib/config';
+import { logAction } from '../lib/audit';
+
 
 interface ManagedUser {
   id: string;
@@ -106,6 +108,7 @@ export const UsersAdmin: React.FC = () => {
           throw new Error(data.msg || data.error || `buat gagal: HTTP ${res.status}`);
         }
       }
+      void logAction(editing ? 'edit_user' : 'create_user', `${form.username} (${form.role}${form.branch_id ? ', ' + form.branch_id : ''})`);
       setShowForm(false);
       setEditing(null);
       void load();
@@ -130,6 +133,7 @@ export const UsersAdmin: React.FC = () => {
     const t = await token();
     const res = await fetch(`${ADMIN_API_URL}/users/${u.id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${t}` } });
     if (!res.ok) { alert('Gagal menghapus'); return; }
+    void logAction('delete_user', u.username);
     void load();
   };
 
@@ -212,7 +216,7 @@ export const UsersAdmin: React.FC = () => {
                 {!u.active && <span className="badge badge-warning">nonaktif</span>}
               </div>
               <p className="text-xs text-gray-500 mt-0.5">
-                {u.nama_toko || u.name} {u.branch_id ? `â€¢ ${u.branch_id}` : ''}
+                {u.nama_toko || u.name} {u.branch_id ? `Ã¢â‚¬Â¢ ${u.branch_id}` : ''}
               </p>
               <p className="text-[10px] text-gray-400 mt-0.5">
                 Akses: {Object.entries(u.perms || {}).filter(([, v]) => v).map(([k]) => PERM_LABELS[k] || k).join(', ') || '-'}

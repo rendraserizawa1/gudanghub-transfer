@@ -22,6 +22,7 @@
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
     "react-signature-canvas": "^1.1.0-alpha.2",
+    "recharts": "^3.10.1",
     "signature_pad": "^5.1.4",
     "sonner": "^2.0.8",
     "xlsx": "^0.18.5"

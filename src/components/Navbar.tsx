@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, FileText, ScanLine, PackageCheck, ClipboardCheck,
-  Users, Package, BarChart3, KeyRound,
+  Users, Package, BarChart3, KeyRound, History,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -53,6 +53,11 @@ export const Navbar: React.FC = () => {
         {isAdmin && (
           <NavLink to="/users" className={({ isActive }) => itemCls(isActive)}>
             <Users size={14} /> Kelola User
+          </NavLink>
+        )}
+        {isAdmin && (
+          <NavLink to="/audit" className={({ isActive }) => itemCls(isActive)}>
+            <History size={14} /> Audit Trail
           </NavLink>
         )}
         <NavLink to="/password" className={({ isActive }) => itemCls(isActive)}>

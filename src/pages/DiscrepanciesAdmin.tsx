@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase as sb } from '../lib/supabase';
 import { DISCREPANCY_LABELS } from '../lib/config';
+import { logAction } from '../lib/audit';
 import { useAuth } from '../context/AuthContext';
 
 interface DiscRow {
@@ -77,7 +78,7 @@ export const DiscrepanciesAdmin: React.FC = () => {
         }
       }
     }
-    alert(action === 'approved' ? 'Approval Berhasil! Status pengiriman diperbarui.' : 'Laporan Selisih Ditolak!');
+    void logAction(action === "approved" ? "approve_discrepancy" : "reject_discrepancy", `${disc.order_no} — ${disc.product_name} (${disc.qty_diff})`);;     alert(action === "approved" ? "Approval Berhasil! Status pengiriman diperbarui." : "Laporan Selisih Ditolak!");
     setRows(rows.filter((r) => r.id !== disc.id));
   };
 

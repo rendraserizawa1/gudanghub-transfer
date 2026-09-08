@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { fetchTransfers, type TransferRecord } from '../lib/supabase';
 import { STATUS_LABELS, STATUS_COLORS, getBranchName } from '../lib/config';
 import { downloadPDF, downloadXLSX } from '../lib/export';
+import { DashboardCharts } from '../components/DashboardCharts';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -86,6 +87,8 @@ export const Dashboard: React.FC = () => {
           <p className="text-sm font-bold text-success-600 mt-2">Ã¢Å“â€œ Online / Offline Ready</p>
         </div>
       </div>
+
+      <DashboardCharts />
 
       {canDownload && transfers.length > 0 && (
         <div className="flex gap-2">

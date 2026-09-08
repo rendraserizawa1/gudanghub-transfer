@@ -15,6 +15,7 @@ import { ProductsMaster } from './pages/ProductsMaster';
 import { UsersAdmin } from './pages/UsersAdmin';
 import { PasswordChange } from './pages/PasswordChange';
 import { ReportsWeb } from './pages/ReportsWeb';
+import { AuditTrail } from './pages/AuditTrail';
 
 function FullPageLoader() {
   return (
@@ -96,6 +97,10 @@ export const App: React.FC = () => {
           <Route
             path="/products"
             element={<AdminOnly><ProductsMaster /></AdminOnly>}
+          />
+          <Route
+            path="/audit"
+            element={<AdminOnly><AuditTrail /></AdminOnly>}
           />
           <Route
             path="/users"
