@@ -11,6 +11,7 @@ import { ScanReceiving } from './pages/ScanReceiving';
 import { DiscrepanciesAdmin } from './pages/DiscrepanciesAdmin';
 import { ProductsMaster } from './pages/ProductsMaster';
 import { UsersAdmin } from './pages/UsersAdmin';
+import { PasswordChange } from './pages/PasswordChange';
 
 function FullPageLoader() {
   return (
@@ -59,6 +60,10 @@ export const App: React.FC = () => {
                 <ProductsMaster />
               </AdminOnly>
             }
+          />
+          <Route
+            path="/password"
+            element={<PasswordChange />}
           />
           <Route
             path="/users"
