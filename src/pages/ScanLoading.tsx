@@ -78,12 +78,12 @@ export const ScanLoading: React.FC = () => {
   const handleScan = async (barcode: string) => {
     const product = await findProductByBarcode(barcode);
     if (!product) {
-      alert('âš ï¸ Barcode Tidak Dikenal dalam Master Produk!');
+      alert('Ã¢Å¡Â Ã¯Â¸Â Barcode Tidak Dikenal dalam Master Produk!');
       return;
     }
     const itemInTransfer = items.find((i) => i.product_id === product.id);
     if (!itemInTransfer) {
-      alert(`âš ï¸ Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
+      alert(`Ã¢Å¡Â Ã¯Â¸Â Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
       return;
     }
     setLoadedQty((prev) => ({
@@ -154,30 +154,30 @@ export const ScanLoading: React.FC = () => {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Scan Muat Barang</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Scan Muat Barang</h2>
         <p className="text-xs text-gray-500">Scan fisik barang satu per satu sebelum dimasukkan ke dalam truk</p>
       </div>
 
       {!id && (
-        <div className="card p-8 text-center text-xs text-gray-400">
+        <div className="card dark:bg-[#141828] dark:border-[#232840] p-8 text-center text-xs text-gray-400">
           Pilih surat jalan berstatus <strong>Sedang Muat</strong> dari daftar Surat Jalan untuk mulai scan.
         </div>
       )}
 
       {id && (
-        <div className="card space-y-3">
+        <div className="card dark:bg-[#141828] dark:border-[#232840] space-y-3">
           <div className="flex items-center justify-between border-b pb-2">
             <span className="font-bold text-brand-700">{orderNo || 'Memuat...'}</span>
             <span className="badge badge-warning">{status === 'in_transit' ? 'Berangkat' : 'Proses Muat'}</span>
           </div>
 
           <div className="text-xs space-y-1 text-gray-600">
-            <p>Sopir: <span className="font-semibold text-gray-900">{driverName || '-'}</span> ({plate || '-'})</p>
-            <p>Tujuan: <span className="font-semibold text-gray-900">{getBranchName(destBranch) || '-'}</span></p>
+            <p>Sopir: <span className="font-semibold text-gray-900 dark:text-white">{driverName || '-'}</span> ({plate || '-'})</p>
+            <p>Tujuan: <span className="font-semibold text-gray-900 dark:text-white">{getBranchName(destBranch) || '-'}</span></p>
           </div>
 
           <div className="border-t pt-3 space-y-2">
-            <label className="block text-xs font-semibold text-gray-700">Input / Scan Barcode Produk</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200">Input / Scan Barcode Produk</label>
             <BarcodeScanner onDetected={(b) => void handleScan(b)} />
             <p className="text-[10px] text-gray-400">
               Kamera akan diminta izin saat dinyalakan. Barcode wajib terdaftar di Master Produk.
@@ -185,7 +185,7 @@ export const ScanLoading: React.FC = () => {
           </div>
 
           <div className="border-t pt-3 space-y-2">
-            <h3 className="text-xs font-bold text-gray-900">Progress Scan Muat Barang</h3>
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white">Progress Scan Muat Barang</h3>
             <div className="divide-y border rounded-lg overflow-hidden">
               {items.map((item) => {
                 const loaded = loadedQty[item.product_id] || 0;
@@ -193,7 +193,7 @@ export const ScanLoading: React.FC = () => {
                 return (
                   <div key={item.id} className="p-3 bg-white flex items-center justify-between text-xs">
                     <div>
-                      <p className="font-bold text-gray-900">{item.product_name}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">{item.product_name}</p>
                       <p className="text-[10px] text-gray-400 font-mono">Barcode: {item.product_id}</p>
                     </div>
                     <div className="text-right">
@@ -208,7 +208,7 @@ export const ScanLoading: React.FC = () => {
           </div>
 
           <div className="border-t pt-3 space-y-3">
-            <h3 className="text-xs font-bold text-gray-900">Bukti Foto Bagasi & Segel Terkunci</h3>
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white">Bukti Foto Bagasi & Segel Terkunci</h3>
             {photoSeal ? (
               <div className="relative rounded-lg overflow-hidden border">
                 <img src={photoSeal} alt="Foto Segel" className="w-full h-48 object-cover" />
@@ -222,15 +222,15 @@ export const ScanLoading: React.FC = () => {
               </div>
             ) : (
               <button type="button" onClick={() => void handleCaptureSeal()} className="btn-outline w-full py-3 text-xs">
-                ðŸ“¸ Ambil Foto Pintu Truk Terkunci / Bagasi
+                Ã°Å¸â€œÂ¸ Ambil Foto Pintu Truk Terkunci / Bagasi
               </button>
             )}
           </div>
 
           <div className="border-t pt-3 space-y-3">
-            <h3 className="text-xs font-bold text-gray-900">Tanda Tangan Digital 2 Pihak</h3>
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white">Tanda Tangan Digital 2 Pihak</h3>
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Nama Sopir (diisi petugas)</label>
+              <label className="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">Nama Sopir (diisi petugas)</label>
               <input
                 type="text"
                 value={sopirName}
@@ -245,14 +245,14 @@ export const ScanLoading: React.FC = () => {
                 onClick={() => setActiveSigModal('pengirim')}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigPengirim ? 'âœ“ TT Pengirim' : 'âœï¸ TT Pengirim'}
+                {sigPengirim ? 'Ã¢Å“â€œ TT Pengirim' : 'Ã¢Å“ÂÃ¯Â¸Â TT Pengirim'}
               </button>
               <button
                 type="button"
                 onClick={() => { if (!sopirName.trim()) alert('Isi nama sopir dulu!'); else setActiveSigModal('sopir'); }}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigSopir ? 'âœ“ TT Sopir' : 'âœï¸ TT Sopir Transport'}
+                {sigSopir ? 'Ã¢Å“â€œ TT Sopir' : 'Ã¢Å“ÂÃ¯Â¸Â TT Sopir Transport'}
               </button>
             </div>
           </div>

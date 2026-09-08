@@ -32,15 +32,15 @@ export const TransfersList: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Daftar Surat Jalan (Transfer Order)</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Daftar Surat Jalan (Transfer Order)</h2>
           <p className="text-xs text-gray-500">Semua riwayat dan antrean pengiriman barang antar cabang</p>
         </div>
 
         <div className="flex items-center gap-2">
           {canDownload && transfers.length > 0 && (
             <>
-              <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">â¬‡ PDF</button>
-              <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">â¬‡ XLSX</button>
+              <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">Ã¢Â¬â€¡ PDF</button>
+              <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">Ã¢Â¬â€¡ XLSX</button>
             </>
           )}
           <Link to="/transfers/new" className="btn-primary text-xs">
@@ -52,10 +52,10 @@ export const TransfersList: React.FC = () => {
       <div className="space-y-3">
         {loading && <p className="py-4 text-center text-xs text-gray-400">Memuat data...</p>}
         {!loading && transfers.length === 0 && (
-          <div className="card p-8 text-center text-xs text-gray-400">Belum ada surat jalan.</div>
+          <div className="card dark:bg-[#141828] dark:border-[#232840] p-8 text-center text-xs text-gray-400">Belum ada surat jalan.</div>
         )}
         {transfers.map((t) => (
-          <div key={t.id} className="card hover:border-brand-300 transition-colors">
+          <div key={t.id} className="card dark:bg-[#141828] dark:border-[#232840] hover:border-brand-300 transition-colors">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
               <div>
                 <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export const TransfersList: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-gray-600 mt-1">
-                  <span className="font-semibold">{getBranchName(t.origin_branch_id)}</span> â†’{' '}
+                  <span className="font-semibold">{getBranchName(t.origin_branch_id)}</span> Ã¢â€ â€™{' '}
                   <span className="font-semibold">{getBranchName(t.dest_branch_id)}</span>
                 </p>
               </div>
@@ -85,9 +85,9 @@ export const TransfersList: React.FC = () => {
             </div>
 
             <div className="pt-3 text-xs text-gray-500 grid grid-cols-2 sm:grid-cols-3 gap-2">
-              <div>Sopir: <span className="font-semibold text-gray-800">{t.driver_name}</span></div>
-              <div>Plat Mobil: <span className="font-semibold text-gray-800">{t.truck_plate}</span></div>
-              <div>Dibuat: <span className="font-semibold text-gray-800">{t.created_at}</span></div>
+              <div>Sopir: <span className="font-semibold text-gray-800 dark:text-gray-100">{t.driver_name}</span></div>
+              <div>Plat Mobil: <span className="font-semibold text-gray-800 dark:text-gray-100">{t.truck_plate}</span></div>
+              <div>Dibuat: <span className="font-semibold text-gray-800 dark:text-gray-100">{t.created_at}</span></div>
             </div>
           </div>
         ))}

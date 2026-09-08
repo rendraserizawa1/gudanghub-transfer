@@ -133,56 +133,56 @@ export const UsersAdmin: React.FC = () => {
     void load();
   };
 
-  if (user?.role !== 'admin') return <div className="card p-8 text-center text-xs text-gray-400">Khusus admin.</div>;
+  if (user?.role !== 'admin') return <div className="card dark:bg-[#141828] dark:border-[#232840] p-8 text-center text-xs text-gray-400">Khusus admin.</div>;
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Kelola User & Akses</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Kelola User & Akses</h2>
           <p className="text-xs text-gray-500">Buat akun, atur role, cabang, password, dan batasan izin per user</p>
         </div>
         <button type="button" onClick={openCreate} className="btn-primary text-xs">+ Buat Akun Baru</button>
       </div>
 
-      {error && <div className="card border-danger-500/30 text-xs text-danger-600">Error: {error}</div>}
+      {error && <div className="card dark:bg-[#141828] dark:border-[#232840] border-danger-500/30 text-xs text-danger-600">Error: {error}</div>}
 
       {showForm && (
-        <form onSubmit={save} className="card space-y-3">
-          <h3 className="text-sm font-bold text-gray-900">{editing ? `Edit: ${editing.username}` : 'Buat Akun Baru'}</h3>
+        <form onSubmit={save} className="card dark:bg-[#141828] dark:border-[#232840] space-y-3">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white">{editing ? `Edit: ${editing.username}` : 'Buat Akun Baru'}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="text-xs">
-              <span className="font-semibold text-gray-700">Username *</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Username *</span>
               <input className="input-field mt-1" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} required disabled={!!editing} />
             </label>
             <label className="text-xs">
-              <span className="font-semibold text-gray-700">{editing ? 'Password Baru (opsional)' : 'Password *'}</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">{editing ? 'Password Baru (opsional)' : 'Password *'}</span>
               <input className="input-field mt-1" type="text" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required={!editing} placeholder={editing ? 'biarkan kosong = tidak diubah' : ''} />
             </label>
             <label className="text-xs">
-              <span className="font-semibold text-gray-700">Role</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Role</span>
               <select className="input-field mt-1" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as 'admin' | 'toko_cabang' })}>
                 <option value="toko_cabang">Toko Cabang</option>
                 <option value="admin">Admin</option>
               </select>
             </label>
             <label className="text-xs">
-              <span className="font-semibold text-gray-700">Cabang / Toko</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Cabang / Toko</span>
               <select className="input-field mt-1" value={form.branch_id} onChange={(e) => setForm({ ...form, branch_id: e.target.value })} disabled={form.role === 'admin'}>
                 {BRANCHES.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </label>
             <label className="text-xs sm:col-span-2">
-              <span className="font-semibold text-gray-700">Nama Toko / Tampilan</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Nama Toko / Tampilan</span>
               <input className="input-field mt-1" value={form.nama_toko} onChange={(e) => setForm({ ...form, nama_toko: e.target.value })} />
             </label>
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-gray-700 mb-2">Batasan / Akses per akun:</p>
+            <p className="text-xs font-semibold text-gray-700 dark:text-gray-200 mb-2">Batasan / Akses per akun:</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {Object.keys(PERM_LABELS).map((k) => (
-                <label key={k} className="flex items-center gap-2 text-xs text-gray-700 bg-gray-50 border rounded-lg px-3 py-2">
+                <label key={k} className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-[#0A0E1A] border rounded-lg px-3 py-2">
                   <input
                     type="checkbox"
                     checked={!!form.perms[k]}
@@ -201,18 +201,18 @@ export const UsersAdmin: React.FC = () => {
         </form>
       )}
 
-      <div className="card space-y-2">
+      <div className="card dark:bg-[#141828] dark:border-[#232840] space-y-2">
         {loading && <p className="py-4 text-center text-xs text-gray-400">Memuat user...</p>}
         {!loading && users.map((u) => (
           <div key={u.id} className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b last:border-b-0">
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-xs text-gray-900">{u.username}</span>
+                <span className="font-bold text-xs text-gray-900 dark:text-white">{u.username}</span>
                 <span className={`badge ${u.role === 'admin' ? 'badge-danger' : 'badge-info'}`}>{u.role}</span>
                 {!u.active && <span className="badge badge-warning">nonaktif</span>}
               </div>
               <p className="text-xs text-gray-500 mt-0.5">
-                {u.nama_toko || u.name} {u.branch_id ? `• ${u.branch_id}` : ''}
+                {u.nama_toko || u.name} {u.branch_id ? `â€¢ ${u.branch_id}` : ''}
               </p>
               <p className="text-[10px] text-gray-400 mt-0.5">
                 Akses: {Object.entries(u.perms || {}).filter(([, v]) => v).map(([k]) => PERM_LABELS[k] || k).join(', ') || '-'}

@@ -34,10 +34,10 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Dashboard Operasional</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard Operasional</h2>
           <p className="text-xs text-gray-500">
-            Selamat datang, <span className="font-semibold text-gray-800">{user?.name}</span> ({user?.role})
-            {user?.branch_id ? ` â€¢ ${getBranchName(user.branch_id)}` : ''}
+            Selamat datang, <span className="font-semibold text-gray-800 dark:text-gray-100">{user?.name}</span> ({user?.role})
+            {user?.branch_id ? ` Ã¢â‚¬Â¢ ${getBranchName(user.branch_id)}` : ''}
           </p>
         </div>
 
@@ -66,39 +66,39 @@ export const Dashboard: React.FC = () => {
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card">
+        <div className="card dark:bg-[#141828] dark:border-[#232840]">
           <p className="text-xs text-gray-500">Total Pengiriman</p>
-          <p className="text-2xl font-black text-gray-900 mt-1">{loading ? 'â€¦' : transfers.length}</p>
+          <p className="text-2xl font-black text-gray-900 dark:text-white mt-1">{loading ? 'Ã¢â‚¬Â¦' : transfers.length}</p>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-[#141828] dark:border-[#232840]">
           <p className="text-xs text-gray-500">Dalam Perjalanan</p>
-          <p className="text-2xl font-black text-warning-600 mt-1">{loading ? 'â€¦' : inTransitCount}</p>
+          <p className="text-2xl font-black text-warning-600 mt-1">{loading ? 'Ã¢â‚¬Â¦' : inTransitCount}</p>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-[#141828] dark:border-[#232840]">
           <p className="text-xs text-gray-500">Ada Selisih (Karantina)</p>
-          <p className="text-2xl font-black text-danger-600 mt-1">{loading ? 'â€¦' : pendingDiscrepancies.length}</p>
+          <p className="text-2xl font-black text-danger-600 mt-1">{loading ? 'Ã¢â‚¬Â¦' : pendingDiscrepancies.length}</p>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-[#141828] dark:border-[#232840]">
           <p className="text-xs text-gray-500">Mode Sistem</p>
-          <p className="text-sm font-bold text-success-600 mt-2">âœ“ Online / Offline Ready</p>
+          <p className="text-sm font-bold text-success-600 mt-2">Ã¢Å“â€œ Online / Offline Ready</p>
         </div>
       </div>
 
       {canDownload && transfers.length > 0 && (
         <div className="flex gap-2">
-          <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">â¬‡ Download PDF</button>
-          <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">â¬‡ Download XLSX</button>
+          <button type="button" onClick={() => downloadPDF(transfers)} className="btn-outline text-xs">Ã¢Â¬â€¡ Download PDF</button>
+          <button type="button" onClick={() => downloadXLSX(transfers)} className="btn-outline text-xs">Ã¢Â¬â€¡ Download XLSX</button>
         </div>
       )}
 
-      <div className="card space-y-4">
+      <div className="card dark:bg-[#141828] dark:border-[#232840] space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-gray-900">Daftar Pengiriman Terbaru</h3>
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white">Daftar Pengiriman Terbaru</h3>
           <Link to="/transfers" className="text-xs font-semibold text-brand-600 hover:underline">
-            Lihat Semua â†’
+            Lihat Semua Ã¢â€ â€™
           </Link>
         </div>
 
@@ -111,18 +111,18 @@ export const Dashboard: React.FC = () => {
             <div key={t.id} className="py-3 flex items-center justify-between gap-4 min-w-[500px]">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-xs text-gray-900">{t.order_no}</span>
+                  <span className="font-bold text-xs text-gray-900 dark:text-white">{t.order_no}</span>
                   <span className={`badge ${STATUS_COLORS[t.status as keyof typeof STATUS_COLORS] || 'badge-info'}`}>
                     {STATUS_LABELS[t.status as keyof typeof STATUS_LABELS] || t.status}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {getBranchName(t.origin_branch_id)} â†’ {getBranchName(t.dest_branch_id)}
+                  {getBranchName(t.origin_branch_id)} Ã¢â€ â€™ {getBranchName(t.dest_branch_id)}
                 </p>
               </div>
 
               <div className="text-right">
-                <p className="text-xs font-medium text-gray-700">{t.driver_name} ({t.truck_plate})</p>
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-200">{t.driver_name} ({t.truck_plate})</p>
                 <p className="text-[10px] text-gray-400">{t.created_at}</p>
               </div>
             </div>
