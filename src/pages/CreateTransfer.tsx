@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { BRANCHES, getBranchName } from '../lib/config';
+import { BRANCHES, getBranchName, ADMIN_API_URL } from '../lib/config';
 import { fetchProducts, createTransfer, insertTransferItems } from '../lib/supabase';
 import type { Product } from '../types';
 
@@ -67,6 +67,26 @@ export const CreateTransfer: React.FC = () => {
       );
 
       alert(`Surat Jalan ${order_no} berhasil dibuat!`);
+
+      // Notif push ke admin (fire-and-forget, tidak blok)
+      try {
+        const { supabase } = await import('../lib/supabase');
+        if (!supabase) throw new Error('no client');
+        const { data: session } = await supabase.auth.getSession();
+        const t = session.session?.access_token;
+        if (t) {
+          void fetch(ADMIN_API_URL + '/push', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              admins: true,
+              title: 'Surat Jalan Baru',
+              body: `${order_no}: ${getBranchName(origin)} → ${getBranchName(dest)} oleh ${user.name}`,
+            }),
+          });
+        }
+      } catch { /* notif opsional */ }
+
       navigate('/transfers');
     } catch (err) {
       alert(`Gagal membuat surat jalan: ${err instanceof Error ? err.message : err}`);
