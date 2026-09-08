@@ -6,6 +6,7 @@ import { capturePhoto, addWatermark } from '../lib/camera';
 import { SignatureModal } from '../components/SignatureModal';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { getBranchName } from '../lib/config';
+import { uploadPhoto } from '../lib/storage';
 import type { Product } from '../types';
 
 interface LoadableItem {
@@ -78,12 +79,12 @@ export const ScanLoading: React.FC = () => {
   const handleScan = async (barcode: string) => {
     const product = await findProductByBarcode(barcode);
     if (!product) {
-      alert('Ã¢Å¡Â Ã¯Â¸Â Barcode Tidak Dikenal dalam Master Produk!');
+      alert('ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Barcode Tidak Dikenal dalam Master Produk!');
       return;
     }
     const itemInTransfer = items.find((i) => i.product_id === product.id);
     if (!itemInTransfer) {
-      alert(`Ã¢Å¡Â Ã¯Â¸Â Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
+      alert(`ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Peringatan: Barang [${product.name}] Tidak Ada di Surat Jalan Ini!`);
       return;
     }
     setLoadedQty((prev) => ({
@@ -134,7 +135,7 @@ export const ScanLoading: React.FC = () => {
 
     const { error } = await sb.from('transfer_orders').update({
       status: 'in_transit',
-      photo_loading_seal: photoSeal,
+      photo_loading_seal: await uploadPhoto(photoSeal, 'loading'),
       sign_pengirim: sigPengirim,
       sign_sopir: sigSopir,
       driver_name: sopirName || driverName,
@@ -222,7 +223,7 @@ export const ScanLoading: React.FC = () => {
               </div>
             ) : (
               <button type="button" onClick={() => void handleCaptureSeal()} className="btn-outline w-full py-3 text-xs">
-                Ã°Å¸â€œÂ¸ Ambil Foto Pintu Truk Terkunci / Bagasi
+                ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¸ Ambil Foto Pintu Truk Terkunci / Bagasi
               </button>
             )}
           </div>
@@ -245,14 +246,14 @@ export const ScanLoading: React.FC = () => {
                 onClick={() => setActiveSigModal('pengirim')}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigPengirim ? 'Ã¢Å“â€œ TT Pengirim' : 'Ã¢Å“ÂÃ¯Â¸Â TT Pengirim'}
+                {sigPengirim ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ TT Pengirim' : 'ÃƒÂ¢Ã…â€œÃ‚ÂÃƒÂ¯Ã‚Â¸Ã‚Â TT Pengirim'}
               </button>
               <button
                 type="button"
                 onClick={() => { if (!sopirName.trim()) alert('Isi nama sopir dulu!'); else setActiveSigModal('sopir'); }}
                 className="btn-outline text-xs py-2.5"
               >
-                {sigSopir ? 'Ã¢Å“â€œ TT Sopir' : 'Ã¢Å“ÂÃ¯Â¸Â TT Sopir Transport'}
+                {sigSopir ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“ TT Sopir' : 'ÃƒÂ¢Ã…â€œÃ‚ÂÃƒÂ¯Ã‚Â¸Ã‚Â TT Sopir Transport'}
               </button>
             </div>
           </div>
