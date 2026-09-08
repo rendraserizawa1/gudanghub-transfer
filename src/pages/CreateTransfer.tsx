@@ -12,10 +12,9 @@ export const CreateTransfer: React.FC = () => {
   const [saving, setSaving] = useState(false);
 
   const isSuper = user?.role === 'admin';
-  const isChecker = user?.role === 'toko_cabang';
-  const allowedOrigin = isChecker ? ['CB000'] : [user?.branch_id || ''];
+  const fixedOrigin = isSuper ? 'CB000' : (user?.branch_id || 'CB000');
 
-  const [origin, setOrigin] = useState(isSuper ? 'CB000' : allowedOrigin[0]);
+  const [origin, setOrigin] = useState(fixedOrigin);
   const [dest, setDest] = useState('CB001');
   const [driver, setDriver] = useState('');
   const [plate, setPlate] = useState('');
@@ -88,11 +87,11 @@ export const CreateTransfer: React.FC = () => {
           <div>
             <label className="block text-xs font-semibold text-gray-700 mb-1">Cabang Asal (Loading)</label>
             <select value={origin} onChange={(e) => setOrigin(e.target.value)} className="input-field" disabled={!isSuper}>
-              {BRANCHES.filter((b) => b.type === 'pusat' || (isSuper || b.id === user?.branch_id || b.id === 'CB000')).map((b) => (
+              {BRANCHES.filter((b) => isSuper || b.id === fixedOrigin).map((b) => (
                 <option key={b.id} value={b.id}>{b.name}</option>
               ))}
             </select>
-            {!isSuper && <p className="text-[10px] text-gray-400 mt-1">Origin sesuai akun Anda ({getBranchName(origin)})</p>}
+            {!isSuper && <p className="text-[10px] text-gray-400 mt-1">Origin sesuai akun Anda ({getBranchName(fixedOrigin)})</p>}
           </div>
 
           <div>
