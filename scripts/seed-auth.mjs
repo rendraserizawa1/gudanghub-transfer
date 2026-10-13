@@ -1,5 +1,5 @@
-// Seed akun Supabase Auth (role & cabang disimpan di user_metadata) untuk GudangHub Transfer v2
-// Jalankan: node scripts/seed-auth.mjs
+﻿// Seed akun Supabase Auth (role & cabang disimpan di user_metadata) untuk GudangHub Transfer v2
+// Jalankan: node scripts/seed-auth.mjs  (password diambil dari env SEED_PASS_*, JANGAN hardcode di repo)
 // Butuh env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 import { createClient } from '@supabase/supabase-js';
 
@@ -13,9 +13,9 @@ if (!url || !serviceKey) {
 const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false } });
 
 const users = [
-  { email: 'superadmin@gh.local', password: REDACTED, name: 'Super Admin', role: 'superadmin', branch_id: null },
-  { email: 'checker@gh.local', password: REDACTED, name: 'Checker Gudang Pusat', role: 'checker', branch_id: 'CB000' },
-  { email: 'penerima-kefa@gh.local', password: REDACTED, name: 'Penerima Kefamenanu', role: 'penerima', branch_id: 'CB004' },
+  { email: 'superadmin@gh.local', password: process.env.SEED_PASS_SUPERADMIN, name: 'Super Admin', role: 'superadmin', branch_id: null },
+  { email: 'checker@gh.local', password: process.env.SEED_PASS_CHECKER, name: 'Checker Gudang Pusat', role: 'checker', branch_id: 'CB000' },
+  { email: 'penerima-kefa@gh.local', password: process.env.SEED_PASS_PENERIMA, name: 'Penerima Kefamenanu', role: 'penerima', branch_id: 'CB004' },
 ];
 
 for (const u of users) {
@@ -31,3 +31,4 @@ for (const u of users) {
   }
   console.log(`OK ${u.email} -> role=${u.role} branch=${u.branch_id || '-'}`);
 }
+
